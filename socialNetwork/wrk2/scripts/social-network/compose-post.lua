@@ -1,4 +1,4 @@
-local socket = require("socket")
+local socket = require("socket") -- used to generate the seed
 math.randomseed(socket.gettime()*1000)
 math.random(); math.random(); math.random()
 
@@ -11,9 +11,13 @@ local charset = {'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's',
 local decset = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'}
 
 -- load env vars
-local max_user_index = tonumber(os.getenv("max_user_index")) or 962
+local max_user_index = tonumber(os.getenv("max_user_index")) or 962 -- max_user_index is value defined at environment or 962
 
 local function stringRandom(length)
+  --[[  
+      Generate random strings of size <length>
+      Note: the <..> symbol in Lua is used for string concatenation 
+  ]]
   if length > 0 then
     return stringRandom(length - 1) .. charset[math.random(1, #charset)]
   else
@@ -31,16 +35,16 @@ end
 
 request = function()
   local user_index = math.random(0, max_user_index - 1)
-  local username = "username_" .. tostring(user_index)
-  local user_id = tostring(user_index)
-  local text = stringRandom(256)
+  local username = "username_" .. tostring(user_index) -- Example: username_123
+  local user_id = tostring(user_index) -- Example: 123
+  local text = stringRandom(256) -- 
   local num_user_mentions = math.random(0, 5)
   local num_urls = math.random(0, 5)
   local num_media = math.random(0, 4)
   local media_ids = '['
   local media_types = '['
 
-  for i = 0, num_user_mentions, 1 do
+  for i = 0, num_user_mentions, 1 do -- the <1> here is the step value (increment)
     local user_mention_id
     while (true) do
       user_mention_id = math.random(0, max_user_index - 1)
