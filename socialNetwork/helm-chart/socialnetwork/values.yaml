@@ -10,6 +10,10 @@ global:
       enabled: false
     standalone:
       enabled: true
+    replication:
+      primary: redis-master
+      replica: redis-replicas
+      enabled: false
   memcached:
     cluster:
       enabled: false
@@ -61,3 +65,15 @@ redis-cluster:
       enabled: false
     livenessProbe:
       enabled: false
+
+redis:
+  fullnameOverride: "redis"
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: false
+  replica:
+    persistence:
+      enabled: false
+    replicaCount: 6

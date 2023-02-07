@@ -34,6 +34,7 @@ func main() {
 
 	serv_port, _ := strconv.Atoi(result["FrontendPort"])
 	serv_ip := result["FrontendIP"]
+	knative_dns := result["KnativeDomainName"]
 
 	log.Info().Msgf("Read target port: %v", serv_port)
 	log.Info().Msgf("Read consul address: %v", result["consulAddress"])
@@ -43,7 +44,7 @@ func main() {
 		jaegeraddr = flag.String("jaegeraddr", result["jaegerAddress"], "Jaeger address")
 		consuladdr = flag.String("consuladdr", result["consulAddress"], "Consul address")
 	)
-
+	flag.Parse()
 	log.Info().Msgf("Initializing jaeger agent [service name: %v | host: %v]...", "frontend", *jaegeraddr)
 	tracer, err := tracing.Init("frontend", *jaegeraddr)
 	if err != nil {
@@ -59,10 +60,11 @@ func main() {
 	log.Info().Msg("Consul agent initialized")
 
 	srv := &frontend.Server{
-		Registry: registry,
-		Tracer:   tracer,
-		IpAddr:   serv_ip,
-		Port:     serv_port,
+		KnativeDns: knative_dns,
+		Registry:   registry,
+		Tracer:     tracer,
+		IpAddr:     serv_ip,
+		Port:       serv_port,
 	}
 
 	log.Info().Msg("Starting server...")
